@@ -17,3 +17,9 @@ func change_room(index):
 	current_room = room_scenes[index].instance()
 	add_child(current_room)
 	$Player.position = current_room.get_node("PlayerStartPosition").position
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("reset"):
+		# Just start over if you get stuck
+		$Player.reset_stats()
+		change_room(0)
