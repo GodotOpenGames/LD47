@@ -8,6 +8,7 @@ var max_fall_speed = 1000
 var velocity = Vector2()
 var facing_right = true
 var lift_object = null
+var on_door = null
 
 func _physics_process(delta: float) -> void:
 	var walk_dir = 0
@@ -25,26 +26,27 @@ func _physics_process(delta: float) -> void:
 		# Handle gravity and jumping
 		velocity.y += gravity
 		if is_on_floor():
-			if velocity.y > 10:
-				velocity.y = 10
+			velocity.y = min(velocity.y, 5)
 			if Input.is_action_just_pressed("jump"):
 				velocity.y = -jump_force
 		else:
 			velocity.y = min(velocity.y, max_fall_speed)
 
-		# Can only pickup or drop while on the ground
-		if is_on_floor():
-			# Try to pickup something, or drop what they've already got
-			if Input.is_action_just_pressed("pickup"):
-				if lift_object != null:
-					drop()
-				else:
-					try_pickup()
+		# Try to pickup something, or drop what they've already got
+		if Input.is_action_just_pressed("pickup"):
+			if lift_object != null:
+				drop()
+			else:
+				try_pickup()
 	
 		# If player is lifting something, and the initial lift animation is done,
 		# keep it at the lift position every frame
 		if lift_object != null:
-			lift_object.position = $LiftPosition.global_position
+			lift_object.global_position = $LiftPosition.global_position
+			
+		# Try to enter a door
+		if Input.is_action_just_pressed("door") && on_door != null:
+			enter_door(on_door)
 	
 	# Set animation based on what player is doing right now
 	var anim_name = get_animation_name(walk_dir)
@@ -54,56 +56,62 @@ func _physics_process(delta: float) -> void:
 	if walk_dir > 0 && !facing_right:
 		facing_right = true
 		$AnimatedSprite.flip_h = false
-		$DropPosition.position.x *= -1
 	elif walk_dir < 0 and facing_right:
 		facing_right = false
 		$AnimatedSprite.flip_h = true
-		$DropPosition.position.x *= -1
 
 func get_animation_name(walk_dir):
-	var name = "idle"
 	if is_on_floor():
-		if walk_dir != 0:
-			name = "walk"
+		if walk_dir == 0:
+			return "idle"
+		else:
+			return "walk"
 	else:
 		if velocity.y < 0:
-			name = "jump"
+			return "jump"
 		else:
-			name = "fall"
-		
-	# Do you even life bro?
-	if lift_object != null:
-		name += "_lift"
-	return name
+			return "fall"
 
 func try_pickup():
-	var object = null
-	# First check for a box in direction they're facing
-	if facing_right:
-		object = $RayCastRight.get_collider()
-	else:
-		object = $RayCastLeft.get_collider()
+	# Check for a box underneath the player
+	var object = $RayCastBottom.get_collider()
 		
-	# If nothing pickable, check for a box underneath the player
+	# If nothing pickable, bail out
 	if object == null || !object.is_in_group("Pickables"):
-		object = $RayCastBottom.get_collider()
-		
-	# If still nothing pickable, bail out
-	if object == null || !object.is_in_group("Pickables"):
-		return false
+		return
 
 	# Pick the object up
 	lift_object = object
-	# Turn off the object's collision detection so it doesn't crush the player
+#	# Turn off the object's collision detection so it doesn't crush the player
 	object.get_node("CollisionShape2D").disabled = true
-	# Tween object position to lift position above player's head
-	$LiftTween.interpolate_property(object, "position", object.position, $LiftPosition.global_position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#	# Tell the object it's being carried so it won't update itself
+#	object.carried = true
+#	# Tween object position to lift position above player's head, also
+#	# move player down to where the object was resting
+	$LiftTween.interpolate_property(object, "position", object.position, position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$LiftTween.interpolate_property(self, "position", position, object.position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$LiftTween.start()
 
 func drop():
-	# Place the object in front of the player
-	$LiftTween.interpolate_property(lift_object, "position", lift_object.position, $DropPosition.global_position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	# Place the object at the player's feet and the player ends up standing atop it
+	# i.e. they switch places
+	$LiftTween.interpolate_property(lift_object, "position", lift_object.position, position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$LiftTween.interpolate_property(self, "position", position, lift_object.position, 0.12, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$LiftTween.start()
 	# Turn the object's collision detection back on
 	lift_object.get_node("CollisionShape2D").disabled = false
+	# Tell the object it's no longer carried so it will update (fall)
+	lift_object.carried = false
 	lift_object = null
+
+func enter_door(destination):
+	# If player is carrying an object, detach it from the scene so it
+	# doesn't get destroyed when the room changes
+	if lift_object != null:
+		get_parent().current_room.remove_child(lift_object)
+		
+	get_parent().change_room(destination)
+	
+	# Attach the object to the new room
+	if lift_object != null:
+		get_parent().current_room.add_child(lift_object)	

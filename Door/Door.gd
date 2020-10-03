@@ -1,8 +1,10 @@
-extends Node2D
+extends Area2D
 
 export var height = 1
 export var closed = false
 export var locked = false
+
+export var destination = 0
 
 func _ready() -> void:
 	if closed:
@@ -16,3 +18,14 @@ func _ready() -> void:
 		if locked && i == height-1:
 			bottom_sprite.region_rect.position.x += 32
 		add_child(bottom_sprite)
+		# Stretch the collision shape to cover the additional sprites
+		$CollisionShape2D.position.y += 16
+		$CollisionShape2D.shape.extents.y += 16
+
+func _on_Door_body_entered(body: Node) -> void:
+	if body.name == "Player":
+		body.on_door = destination
+
+func _on_Door_body_exited(body: Node) -> void:
+	if body.name == "Player":
+		body.on_door = null
