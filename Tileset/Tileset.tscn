@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="StreamTexture" id=2]
+flags = 4
+load_path = "res://.import/walls.png-946bb56d4b170f89ba012ad90c17638e.stex"
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 16 )
+
+[node name="Tileset" type="Node"]
+
+[node name="Tile1" type="Sprite" parent="."]
+texture = SubResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Tile1"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tile1/StaticBody2D"]
+shape = SubResource( 1 )
+
+[node name="Tile2" type="Sprite" parent="."]
+position = Vector2( 50, 0 )
+texture = SubResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 16, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Tile2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tile2/StaticBody2D"]
+shape = SubResource( 1 )
