@@ -13,7 +13,12 @@ var facing_right = true
 var lift_object = null
 var is_lifting = false
 var is_dropping = false
+
 var door = null
+var sign_object = null
+var story = 0
+var special_story1 = false
+var special_story2 = false
 
 func _ready() -> void:
 	reset_stats()
@@ -53,9 +58,12 @@ func _physics_process(_delta: float) -> void:
 		if lift_object != null:
 			lift_object.global_position = $LiftPosition.global_position
 			
-		# Try to enter a door
+		# Try to enter a door or read a sign
 		if Input.is_action_just_pressed("door"):
-			try_enter_door()
+			if door != null:
+				try_enter_door()
+			elif sign_object != null:
+				read_sign()
 	
 	# Set animation based on what player is doing right now
 	var anim_name = get_animation_name(walk_dir)
@@ -123,6 +131,10 @@ func try_pickup():
 	is_lifting = true
 	$LiftTween.start()
 	$PickupSound.play()
+	
+	# Advance story - first block
+	if story < 3:
+		story = 3
 
 func drop():
 	# Place the object at the player's feet and the player ends up standing atop it
@@ -136,9 +148,6 @@ func drop():
 	$PickupSound.play()  # TODO: different sounds for pickup/drop
 
 func try_enter_door():
-	if door == null:
-		return
-		
 	if door.locked:
 		try_unlock_door()
 		return
@@ -153,7 +162,11 @@ func try_enter_door():
 	
 	# Attach the object to the new room
 	if lift_object != null:
-		get_parent().current_room.add_child(lift_object)	
+		get_parent().current_room.add_child(lift_object)
+		
+	# Advance story on first door enter
+	if story < 2:
+		story = 2
 
 func try_unlock_door():
 	# Need a key to go through locked doors
@@ -162,8 +175,23 @@ func try_unlock_door():
 		door.unlock()
 		lift_object.queue_free()
 		lift_object = null
+		
+		# Advance story - unlock door
+		if story < 5:
+			story = 5
 	else:
 		$LockedDoorSound.play()
+
+func read_sign():
+	# Special Story the first time you read while holding a block or key
+	if lift_object != null && lift_object.name.find("Box") > -1 && !special_story1:
+		sign_object.open_text_box(6)
+		special_story1 = true
+	elif lift_object != null && lift_object.name.find("Key") > -1 && !special_story2:
+		sign_object.open_text_box(7)
+		special_story2 = true
+	else:
+		sign_object.open_text_box(story)
 
 func _on_LiftTween_tween_all_completed() -> void:
 	# If the pickup animation completed
