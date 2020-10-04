@@ -14,6 +14,9 @@
 
 [node name="TileMap" parent="." instance=ExtResource( 3 )]
 
+[node name="Sign" parent="." instance=ExtResource( 7 )]
+position = Vector2( 112, 432 )
+
 [node name="PlayerStartPosition" type="Position2D" parent="."]
 position = Vector2( 64, 200 )
 
@@ -42,7 +45,7 @@ locked = true
 position = Vector2( 320, 528 )
 
 [node name="Box3" parent="Boxes" instance=ExtResource( 1 )]
-position = Vector2( 328, 496 )
+position = Vector2( 336, 496 )
 
 [node name="Box2" parent="Boxes" instance=ExtResource( 1 )]
 position = Vector2( 240, 432 )
@@ -51,6 +54,7 @@ position = Vector2( 240, 432 )
 position = Vector2( 48, 48 )
 
 [node name="debug" type="Label" parent="."]
+visible = false
 margin_left = 8.0
 margin_top = 560.0
 margin_right = 48.0
@@ -63,11 +67,5 @@ __meta__ = {
 [node name="Powerup" parent="." instance=ExtResource( 4 )]
 position = Vector2( 160, 304 )
 
-[node name="Key" parent="." instance=ExtResource( 5 )]
-position = Vector2( 464, 112 )
-
 [node name="Key2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 48, 16 )
-
-[node name="Sign" parent="." instance=ExtResource( 7 )]
-position = Vector2( 112, 432 )

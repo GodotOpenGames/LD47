@@ -1,12 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Tileset/images/Tileset.png" type="Texture" id=1]
 [ext_resource path="res://Powerup/Powerup.gd" type="Script" id=2]
 
-[sub_resource type="CanvasItemMaterial" id=1]
-blend_mode = 1
-
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 15, 14 )
 
 [node name="Powerup" type="Area2D"]
@@ -18,14 +15,7 @@ texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 128, 96, 32, 32 )
 
-[node name="SparkleSprite" type="Sprite" parent="."]
-visible = false
-material = SubResource( 1 )
-texture = ExtResource( 1 )
-region_enabled = true
-region_rect = Rect2( 128, 96, 32, 32 )
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 [connection signal="body_entered" from="." to="." method="_on_Powerup_body_entered"]

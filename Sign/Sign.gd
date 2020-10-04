@@ -1,14 +1,18 @@
 extends Sprite
 
+# dumb hack to get the end game text
+export var last_sign = false
+
 var lines = [
-	"HEY! DON'T JUST RUN PAST!\nYOU HAVE TO PRESS UP IF\nYOU WANT TO READ MY SIGN",
-	"HEY! BACK AGAIN SO SOON?\nTHESE ARE MY DOORS,\nONLY COOL PEOPLE ARE ALLOWED TO\nPUSH UP TO GO THROUGH THEM",
-	"HEY!\nI PUT MY BLOCKS RIGHT WHERE I LIKE THEM!\nDON'T PRESS X TO PICK UP AND\nCARRY AROUND MY BLOCKS",
-	"DID YOU SEE MY JUMP SHOES?\nAS A SIGN, I DON'T HAVE FEET BUT I CAN\nSTILL MAKE A FASHION STATEMENT",
+	"HEY, FRIEND! ARE YOU STUCK HERE TOO?\nPRESS UP TO SEE MY COOL TIPS\nOR FASHION ADVICE",
+	"HEY! BACK SO SOON?\nSEE THESE DOORS? PRESS UP TO ENTER\nBUT THERE'S NOTHING THERE",
+	"HEY, BUDDY!\nPRESS X TO PICKUP BLOCKS\nBUT I LIKE TO LEAVE THEM HERE",
+	"DID YOU SEE MY COOL SHOES?\nA SIGN HAS NO FEET BUT THAT'S OK\nIT'S NOT LIKE THEY MAKE YOU JUMP HIGHER,\nSILLY",
 	"DID YOU SEE THAT LOCKED DOOR?\nFORGET YOU SAW THAT LOCKED DOOR\nI LOST THE KEY ANYWAY",
-	"THIS IS JUST OLD BLOCK STORAGE\nTHERE IS NOTHING GOOD HERE\nNOT EVEN AT THE TOP",
-	"WAIT, WHERE DID YOU GET THAT?\nPRESS X TO PUT IT DOWN AND\nI'LL FORGIVE YOU",
-	"IS THAT A KEY?\nI DON'T REMEMBER A LOCKED DOOR HERE\nJUST THROW IT AWAY"
+	"ISN'T IT NICE HERE?\nI LIKE IT HERE, EXCEPT THE TOP PART\nTHE TOP IS BAD DON'T GO THERE",
+	"WAIT, IS THAT MY BLOCK?\nPRESS X TO PUT IT DOWN AND\nI'LL FORGIVE YOU",
+	"IS THAT A KEY?\nI DON'T REMEMBER SEEING A LOCKED DOOR\nJUST THROW IT AWAY",
+	"HEY, FRIEND! WHERE ARE YOU GOING?\nTHAT DOOR SUCKS, IT'S BETTER IN HERE\nIT-IT'S NOT LIKE I WANTED TO HANG OUT\nWITH YOU ANYWAY",
 ]
 
 func _ready() -> void:
@@ -20,7 +24,7 @@ func _input(event: InputEvent) -> void:
 		event.is_action_pressed("ui_accept") || \
 		event.is_action_pressed("ui_cancel"):
 		close_text_box()
-	
+
 func _on_Area2D_body_entered(body: Node) -> void:
 	if body.name == "Player":
 		# Only auto-read the first line
@@ -36,6 +40,9 @@ func _on_Area2D_body_exited(body: Node) -> void:
 		body.sign_object = null
 	
 func open_text_box(index):
+	if last_sign:
+		index = lines.size() - 1
+		
 	# Set sign text
 	$CanvasLayer/PopupDialog/ColorRect/Label.text = lines[index]
 	
@@ -50,7 +57,7 @@ func close_text_box():
 	$CanvasLayer/PopupDialog/Triangle.visible = false
 	$CanvasLayer/PopupDialog.hide()
 	
-func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
+func _on_AnimationPlayer_animation_finished(_anim_name: String) -> void:
 	$TextSound.stop()
 	$CanvasLayer/PopupDialog/Triangle.visible = true
 	set_process_input(true)

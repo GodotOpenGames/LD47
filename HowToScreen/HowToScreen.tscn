@@ -1,0 +1,92 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Player/sounds/Randomize21.wav" type="AudioStream" id=1]
+[ext_resource path="res://HowToScreen/HowToScreen.gd" type="Script" id=2]
+[ext_resource path="res://TitleScreen/fonts/mybadfont2.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Fade/Fade.tscn" type="PackedScene" id=5]
+[ext_resource path="res://TitleScreen/MenuButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://TitleScreen/images/title.png" type="Texture" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 24
+font_data = ExtResource( 3 )
+
+[node name="HowToScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 7 )
+
+[node name="Menu" type="VBoxContainer" parent="."]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 750.0
+margin_bottom = 550.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Menu"]
+margin_right = 700.0
+margin_bottom = 456.0
+size_flags_vertical = 3
+color = Color( 0.364706, 0.152941, 0.364706, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Instructions" type="Label" parent="Menu/ColorRect"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 750.0
+margin_bottom = 271.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.956863, 0.956863, 0.956863, 1 )
+text = "THIS IS A PUZZLE PLATFORMER
+YOUR GOAL IS TO REACH THE DOOR AT THE TOP
+
+KEYS
+
+LEFT RIGHT         MOVE CHARACTER
+UP                        READ SIGN OR ENTER DOOR
+Z                          JUMP
+X                          PICKUP OR DROP
+
+R                          RESET GAME IF YOU GET STUCK"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="VBoxContainer" parent="Menu"]
+margin_top = 460.0
+margin_right = 700.0
+margin_bottom = 500.0
+custom_constants/separation = 20
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" parent="Menu/Buttons" instance=ExtResource( 6 )]
+margin_top = 0.0
+margin_right = 700.0
+margin_bottom = 40.0
+text = "START GAME"
+flat = false
+
+[node name="Fade" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="StartGameSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+[connection signal="mouse_entered" from="Menu/Buttons/StartButton" to="." method="_on_StartButton_mouse_entered"]
+[connection signal="mouse_exited" from="Menu/Buttons/StartButton" to="." method="_on_StartButton_mouse_exited"]
+[connection signal="pressed" from="Menu/Buttons/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="fade_complete" from="Fade" to="." method="_on_Fade_fade_complete"]

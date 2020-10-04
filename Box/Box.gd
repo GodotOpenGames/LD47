@@ -31,21 +31,6 @@ func stop_falling():
 func try_falling():
 	# Assume we're falling, until proven otherwise
 	falling = true
-	
-	# Check what's below the box
-	var object = $RayCastMid.get_collider()
-	if object == null:
-		object = $RayCastRight.get_collider()
-	if object == null:
-		object = $RayCastLeft.get_collider()
-		
-	if object != null:
-		if object.name == "TileMap": 
-			# Landed on tilemap, that's stable
-			stop_falling()
-		elif "falling" in object && !object.falling:
-			# Landed on another object that's not falling, that's stable
-			stop_falling()
 
 func _physics_process(delta: float) -> void:
 	if falling:
@@ -60,4 +45,17 @@ func _physics_process(delta: float) -> void:
 			var _ignore = move_and_collide(Vector2(0, -1))
 		
 		# Check if we're still falling
-		try_falling()
+		# Check what's below the box
+		var object = $RayCastMid.get_collider()
+		if object == null:
+			object = $RayCastRight.get_collider()
+		if object == null:
+			object = $RayCastLeft.get_collider()
+		
+		if object != null:
+			if object.name == "TileMap": 
+				# Landed on tilemap, that's stable
+				stop_falling()
+			elif "falling" in object && !object.falling:
+				# Landed on another object that's not falling, that's stable
+				stop_falling()

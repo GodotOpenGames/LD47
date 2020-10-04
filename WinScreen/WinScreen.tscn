@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://TitleScreen/fonts/mybadfont2.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://TitleScreen/MenuButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://MenuBackground/MenuBackground.tscn" type="PackedScene" id=3]
+[ext_resource path="res://WinScreen/WinScreen.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 120
@@ -21,17 +22,25 @@ shortcut = SubResource( 3 )
 [node name="WinScreen" type="Control"]
 margin_right = 40.0
 margin_bottom = 40.0
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MenuBackground" parent="." instance=ExtResource( 3 )]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 100.0
-margin_top = 160.0
-margin_right = 924.0
-margin_bottom = 500.0
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu" type="VBoxContainer" parent="."]
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 750.0
+margin_bottom = 550.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
@@ -39,32 +48,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 824.0
-margin_bottom = 98.0
+[node name="Label" type="Label" parent="Menu"]
+margin_right = 700.0
+margin_bottom = 105.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0.956863, 0.956863, 0.956863, 1 )
 text = "YOU WIN!!"
 align = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
-margin_top = 118.0
-margin_right = 824.0
-margin_bottom = 289.0
+[node name="Label2" type="Label" parent="Menu"]
+margin_top = 253.0
+margin_right = 700.0
+margin_bottom = 312.0
+size_flags_vertical = 6
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.956863, 0.956863, 0.956863, 1 )
 text = "THANKS FOR PLAYING!
-
-
-
-
 "
 align = 1
 
-[node name="MenuButton" parent="VBoxContainer" instance=ExtResource( 2 )]
-margin_top = 309.0
-margin_bottom = 369.0
+[node name="ReturnButton" parent="Menu" instance=ExtResource( 2 )]
+margin_top = 460.0
+margin_right = 700.0
+margin_bottom = 500.0
 custom_colors/font_color = Color( 0.956863, 0.956863, 0.956863, 1 )
 shortcut = SubResource( 4 )
 text = "RETURN TO TITLE"
-next_scene_path = "res://TitleScreen/TitleScreen.tscn"
+flat = false
+[connection signal="mouse_entered" from="Menu/ReturnButton" to="." method="_on_ReturnButton_mouse_entered"]
+[connection signal="mouse_exited" from="Menu/ReturnButton" to="." method="_on_ReturnButton_mouse_exited"]
+[connection signal="pressed" from="Menu/ReturnButton" to="." method="_on_ReturnButton_pressed"]
