@@ -47,14 +47,6 @@ func try_falling():
 			# Landed on another object that's not falling, that's stable
 			stop_falling()
 
-func _process(delta: float) -> void:
-	# color stuff to help me debug
-#	if falling:
-#		$Sprite.modulate = Color(1, 0, 0, 1)
-#	else:
-#		$Sprite.modulate = Color(1, 1, 1, 1)
-	pass
-
 func _physics_process(delta: float) -> void:
 	if falling:
 		# Move straight down with gravity
@@ -65,7 +57,7 @@ func _physics_process(delta: float) -> void:
 		# If it lands on the player, try to move back up to give the player
 		# some room to get out
 		if collision != null && collision.collider.name == "Player":
-			move_and_collide(Vector2(0, -1))
+			var _ignore = move_and_collide(Vector2(0, -1))
 		
 		# Check if we're still falling
 		try_falling()

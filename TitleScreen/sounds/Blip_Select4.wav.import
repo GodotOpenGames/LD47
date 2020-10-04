@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Blip_Select4.wav-b1f5c220b0c7d4b2290c3672d3662117.sample"
+
+[deps]
+
+source_file="res://TitleScreen/sounds/Blip_Select4.wav"
+dest_files=[ "res://.import/Blip_Select4.wav-b1f5c220b0c7d4b2290c3672d3662117.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

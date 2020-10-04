@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://TitleScreen/MenuButton.gd" type="Script" id=2]
+[ext_resource path="res://TitleScreen/sounds/Blip_Select2.wav" type="AudioStream" id=3]
+[ext_resource path="res://TitleScreen/sounds/Blip_Select4.wav" type="AudioStream" id=4]
+
+[sub_resource type="DynamicFontData" id=1]
+antialiased = false
+font_path = "res://TitleScreen/fonts/mybadfont2.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+font_data = SubResource( 1 )
+
+[node name="MenuButton" type="Button"]
+margin_top = 133.0
+margin_right = 824.0
+margin_bottom = 153.0
+rect_min_size = Vector2( 300, 60 )
+custom_fonts/font = SubResource( 2 )
+text = "BUTTON"
+flat = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="PressSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+[connection signal="mouse_entered" from="." to="." method="_on_MenuButton_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_MenuButton_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_MenuButton_pressed"]

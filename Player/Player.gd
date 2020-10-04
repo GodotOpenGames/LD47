@@ -18,7 +18,7 @@ var door = null
 func _ready() -> void:
 	reset_stats()
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var walk_dir = 0
 	
 	# Don't move player during lift or drop animation
@@ -29,7 +29,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_pressed("walk_right"):
 			walk_dir += 1
 		velocity.x = walk_dir * walk_speed
-		move_and_slide(velocity, Vector2.UP)
+		var _ignore = move_and_slide(velocity, Vector2.UP)
 	
 		# Handle gravity and jumping
 		velocity.y += gravity
@@ -62,14 +62,21 @@ func _physics_process(delta: float) -> void:
 	$AnimatedSprite.play(anim_name)
 	
 	# Make player face the direction of last movement
+	update_face_direction(walk_dir)
+	
+func update_face_direction(walk_dir):
 	if walk_dir > 0 && !facing_right:
 		facing_right = true
 		$AnimatedSprite.flip_h = false
 		$RayCastFront.rotation_degrees = -90
+		if lift_object != null:
+			lift_object.get_node("Sprite").flip_h = false
 	elif walk_dir < 0 and facing_right:
 		facing_right = false
 		$AnimatedSprite.flip_h = true
 		$RayCastFront.rotation_degrees = 90
+		if lift_object != null:
+			lift_object.get_node("Sprite").flip_h = true
 
 func get_animation_name(walk_dir):
 	if is_on_floor():
@@ -185,5 +192,6 @@ func powerup_jump():
 	$PowerupSound.play()
 	
 func reset_stats():
+	$SpawnSound.play()
 	# So far, jump force is the only thing that changes
 	jump_force = start_jump_force

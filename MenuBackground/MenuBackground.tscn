@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="Gradient" id=4]
+colors = PoolColorArray( 0.101961, 0.109804, 0.172549, 1, 0.2, 0.235294, 0.341176, 1 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[node name="MenuBackground" type="TextureRect"]
+margin_left = 1024.0
+margin_right = 1624.0
+margin_bottom = 1024.0
+rect_rotation = 90.0
+texture = SubResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

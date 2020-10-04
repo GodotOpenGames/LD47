@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.265432, 0.697531, 1 )
+colors = PoolColorArray( 0.231373, 0.364706, 0.788235, 1, 0.254902, 0.65098, 0.964706, 1, 0.45098, 0.937255, 0.968627, 1, 0.956863, 0.956863, 0.956863, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[node name="SkyRect" type="TextureRect"]
+margin_left = 512.0
+margin_top = -960.0
+margin_right = 2016.0
+margin_bottom = -448.0
+rect_rotation = 90.0
+texture = SubResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
